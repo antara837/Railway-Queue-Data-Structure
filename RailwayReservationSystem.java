@@ -1,15 +1,9 @@
 import java.util.Scanner;
 
-/**
- * Railway Ticket Counter Simulation using an Array-based Linear Queue.
- */
 class LinearQueue {
     private int[] queue;
-    private int front;
-    private int rear;
-    private int capacity;
+    private int front, rear, capacity;
 
-    // Constructor to initialize the queue
     public LinearQueue(int size) {
         capacity = size;
         queue = new int[capacity];
@@ -17,106 +11,78 @@ class LinearQueue {
         rear = -1;
     }
 
-    // Check if the queue is full
     public boolean isFull() {
         return rear == capacity - 1;
     }
 
-    // Check if the queue is empty
     public boolean isEmpty() {
         return front == -1 || front > rear;
     }
 
-    // Enqueue: Add a customer (Ticket ID / Customer ID) to the end of the line
-    public void enqueue(int customerId) {
+    public void enqueue(int id) {
         if (isFull()) {
-            System.out.println(" Queue Full! Ticket Counter line is at capacity. Cannot add Customer " + customerId);
+            System.out.println("Queue is Full!");
             return;
         }
-        if (front == -1) {
-            front = 0; // Initialize front on first insertion
-        }
-        rear++;
-        queue[rear] = customerId;
-        System.out.println(" Enqueued: Customer " + customerId + " joined the line.");
+        if (front == -1) front = 0;
+        queue[++rear] = id;
+        System.out.println("Customer " + id + " joined the line.");
     }
 
-    // Dequeue: Serve and remove the customer at the front of the line
-    public int dequeue() {
+    public void dequeue() {
         if (isEmpty()) {
-            System.out.println(" Queue Empty! No customers waiting to be served.");
-            return -1;
+            System.out.println("Queue is Empty!");
+            return;
         }
-        int servedCustomer = queue[front];
+        System.out.println("Customer " + queue[front] + " served.");
         front++;
-        System.out.println(" Dequeued: Customer " + servedCustomer + " has been served and left the line.");
-        return servedCustomer;
     }
 
-    // Peek: View the customer currently at the front of the line
-    public void peek() {
-        if (isEmpty()) {
-            System.out.println(" Queue Empty! No customer at the front.");
-            return;
-        }
-        System.out.println(" Peek: Customer " + queue[front] + " is next to be served.");
-    }
-
-    // Display: View all customers currently waiting in line
     public void display() {
         if (isEmpty()) {
-            System.out.println(" Current Queue: [ Empty ]");
+            System.out.println("Queue is Empty.");
             return;
         }
-        System.out.print(" Current Queue (Front to Rear): [ ");
+        System.out.print("Queue: ");
         for (int i = front; i <= rear; i++) {
-            System.out.print("Customer " + queue[i] + (i == rear ? "" : ", "));
+            System.out.print(queue[i] + " ");
         }
-        System.out.println(" ]");
+        System.out.println();
     }
 }
 
 public class RailwayReservationSystem {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter maximum seating capacity for the ticket queue: ");
+        
+        System.out.print("Enter queue capacity: ");
         int capacity = scanner.nextInt();
-
-        LinearQueue ticketQueue = new LinearQueue(capacity);
+        LinearQueue q = new LinearQueue(capacity);
+        
         int choice;
-
         do {
-            System.out.println("\n--- RAILWAY TICKET COUNTER MENU ---");
-            System.out.println("1. Enqueue (Add Customer)");
-            System.out.println("2. Dequeue (Serve Customer)");
-            System.out.println("3. Peek (Check Front Customer)");
-            System.out.println("4. Display Line");
-            System.out.println("5. Exit");
-            System.out.print("Enter your choice (1-5): ");
+            System.out.println("\n1. Enqueue  2. Dequeue  3. Display  4. Exit");
+            System.out.print("Enter choice: ");
             choice = scanner.nextInt();
 
             switch (choice) {
                 case 1:
-                    System.out.print("Enter Customer/Ticket ID to Enqueue: ");
-                    int id = scanner.nextInt();
-                    ticketQueue.enqueue(id);
+                    System.out.print("Enter Customer ID: ");
+                    q.enqueue(scanner.nextInt());
                     break;
                 case 2:
-                    ticketQueue.dequeue();
+                    q.dequeue();
                     break;
                 case 3:
-                    ticketQueue.peek();
+                    q.display();
                     break;
                 case 4:
-                    ticketQueue.display();
-                    break;
-                case 5:
-                    System.out.println("Closing ticket counter. Goodbye!");
+                    System.out.println("Exiting...");
                     break;
                 default:
-                    System.out.println("Invalid choice! Please select 1-5.");
+                    System.out.println("Invalid choice!");
             }
-        } while (choice != 5);
+        } while (choice != 4);
 
         scanner.close();
     }
